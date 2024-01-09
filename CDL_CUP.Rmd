@@ -1,0 +1,191 @@
+---
+title: "Central Upper Peninsula Assessment"
+output: 
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#F5F5DC" #Background color
+      fg: "#3D2B1F" #Text color
+      primary: "#3D2B1F" #Header background color
+      base_font:
+        google: Roboto Slab
+      code_font:
+        google: Source Code Pro
+    orientation: rows
+    vertical_layout: scroll
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(chorddiag)
+library(htmlwidgets)
+library(igraph)
+library(readr)
+library(tidygraph)
+library(tidyverse)
+chord_df<- read_csv("C:/Users/thinshaw/Documents/CDL/CUP/bps2evt_chord.csv")
+```
+
+Home
+==================
+
+Column {data-width=150}
+-----------------------------------------------------------------------
+
+### Map of the Central Upper Peninsula Assessment Area
+
+```{r}
+knitr::include_graphics("C:/Users/thinshaw/Documents/CDL/CUP/CUP_Area.jpg")
+```
+
+Column {data-width=150}
+-----------------------------------------------------------------------
+
+### Description
+
+##### Introduction to the project. What we're doing, what the objectives are, etc.
+
+Past and Present
+==================
+
+Column {data-width=150}
+-----------------------------------------------------------------------
+
+### Map of PreEuropean-Settlement Ecosystems
+
+```{r}
+knitr::include_graphics("C:/Users/thinshaw/Documents/CDL/CUP/PreEuropeanSettlementEcosystems.jpg")
+```
+
+### Map of Current Ecosystems
+
+```{r}
+knitr::include_graphics("C:/Users/thinshaw/Documents/CDL/CUP/CurrentEcosystems.jpg")
+```
+
+Row {data-width=550}
+-----------------------------------------------------------------------
+
+### Past -> Present: Ecosystem Makeup
+
+```{r chordDiagram, fig.height = 6.5, fig.width = 8}
+matrix_df <-as.matrix(as_adjacency_matrix(as_tbl_graph(chord_df),attr = "ACRES"))
+
+#clean up matrix (could be cleaner!)
+matrix_df = subset(matrix_df, select = -c(1:6))
+
+matrix_df <- matrix_df[-c(7:15),]
+
+# make a custom color pallet-you may have to adjust this if some categories are missing! 
+
+# ORIGINAL
+groupColors <-c( "#1d4220", # conifer 
+                 "#fc9d03", # grassland
+                 "#56bf5f", # hardwood
+                 "#397d3f", # hardwood-conifer 
+                 "#7db7c7", # riparian 
+                 "#6e4f1e", # shrubland
+                 "#f5e942", # cur ag
+                 "#1d4220", # cur conifer
+                 "#b0af9e", # developed
+                 "#eb4034", # exotics
+                 "#fc9d03", # grassland
+                 "#56bf5f", # hardwood
+                 "#7db7c7",
+                 "#6e4f1e"# shrubland
+)
+
+#make chord diagram
+chord <- chorddiag(data = matrix_df,
+                 type = "bipartite",
+                 groupColors = groupColors,
+                 groupnamePadding = 10,
+                 groupPadding = 3,
+                 groupnameFontsize = 12 ,
+                 showTicks = FALSE,
+                 margin=130,
+                 tooltipGroupConnector = "    &#x25B6;    ",
+                 chordedgeColor = "#363533"
+)
+
+chord 
+```
+
+Late Succession
+==================
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Biophysical Settings
+
+```{r bps, fig.height = 5, fig.width = 10}
+bps_data <- read.csv("bps_aoi_attributes.csv")
+
+# wrangle data
+bpsname <- bps_data %>%
+  group_by(BPS_NAME) %>%
+  summarize(ACRES = sum(ACRES),
+            REL_PERCENT = sum(REL_PERCENT)) %>%
+  arrange(desc(REL_PERCENT)) %>%
+  top_n(n = 10, wt = REL_PERCENT)
+
+# plot historical (bps)data
+bpsChart <- 
+  ggplot(data = bpsname, aes(x = BPS_NAME, y = REL_PERCENT)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Top 10 Biophysical Settings",
+    caption = "Data from landfire.gov; Chart © Randy Swaty",
+    x = "",
+    y = "Percent of Landscape") +
+  scale_x_discrete(limits = rev(bpsname$BPS_NAME),
+                   labels = function(x) str_wrap(x, width = 18)) +
+  coord_flip() +
+  theme_bw(base_size = 10)
+
+bpsChart
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Existing Vegetation Types
+
+```{r evt, fig.height = 5, fig.width = 10}
+evtname <- read.csv(file = "evt_aoi_attributes.csv") %>%
+  group_by(EVT_NAME) %>%
+  summarize(ACRES = sum(ACRES),
+            REL_PERCENT = sum(REL_PERCENT)) %>%
+  arrange(desc(REL_PERCENT)) %>%
+  top_n(n = 10, wt = REL_PERCENT)
+
+# plot
+evtChart <-
+  ggplot(data = evtname, aes(x = EVT_NAME, y = REL_PERCENT)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Top 10 Existing Vegetation Types",
+    caption = "Data from landfire.gov; Chart © Randy Swaty",
+    x = "",
+    y = "Percent of Landscape") +
+  scale_x_discrete(limits = rev(evtname$EVT_NAME),
+                   labels = function(x) str_wrap(x, width = 18)) +
+  coord_flip() +
+  theme_bw(base_size = 10)
+
+evtChart
+```
+
+
+Wildfire
+==================
+
+### Historical Fire Regime
+
+```{r}
+knitr::include_graphics("C:/Users/thinshaw/Documents/CDL/CUP/HistoricalFireRegime.jpg")
+```
+
+About
+==================
+
