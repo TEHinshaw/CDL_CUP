@@ -22,13 +22,13 @@ library(igraph)
 library(readr)
 library(tidygraph)
 library(tidyverse)
-chord_df<- read_csv("data/bps2evt_chord.csv")
+chord_df <- read_csv("data/bps2evt_chord.csv")
 ```
 
 Home
 ==================
 
-Column {data-width=150}
+Column {data-width = 150}
 -----------------------------------------------------------------------
 
 ### Map of the Central Upper Peninsula Assessment Area
@@ -37,7 +37,7 @@ Column {data-width=150}
 knitr::include_graphics("images/aoi.jpg")
 ```
 
-Column {data-width=150}
+Column {data-width = 150}
 -----------------------------------------------------------------------
 
 ### Description
@@ -47,7 +47,7 @@ Column {data-width=150}
 Past and Present
 ==================
 
-Column {data-width=150}
+Column {data-width = 150}
 -----------------------------------------------------------------------
 
 ### Map of PreEuropean-Settlement Ecosystems
@@ -62,7 +62,7 @@ knitr::include_graphics("images/bps.jpg")
 knitr::include_graphics("images/evt.jpg")
 ```
 
-Row {data-width=550}
+Row {data-width = 550}
 -----------------------------------------------------------------------
 
 ### Past -> Present: Ecosystem Makeup
@@ -113,7 +113,7 @@ chord
 Late Succession
 ==================
 
-Column {data-width=350}
+Column {data-width = 350}
 -----------------------------------------------------------------------
 
 ### Biophysical Settings
@@ -146,7 +146,7 @@ bpsChart <-
 bpsChart
 ```
 
-Column {data-width=350}
+Column {data-width = 350}
 -----------------------------------------------------------------------
 
 ### Existing Vegetation Types
