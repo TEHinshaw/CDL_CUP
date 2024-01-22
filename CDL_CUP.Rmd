@@ -166,7 +166,8 @@ bpsChart <-
   scale_x_discrete(limits = rev(bpsname$BPS_NAME),
                    labels = function(x) str_wrap(x, width = 18)) +
   coord_flip() +
-  theme_bw(base_size = 10)
+  theme_bw(base_size = 10)  +
+  theme(legend.position = "none")
 
 bpsChart
 ```
@@ -210,7 +211,9 @@ evtChart <-
   scale_x_discrete(limits = rev(evtname$EVT_NAME),
                    labels = function(x) str_wrap(x, width = 18)) +
   coord_flip() +
-  theme_bw(base_size = 10)
+  theme_bw(base_size = 10) +
+  scale_fill_manual(values = evt_colors) +
+  theme(legend.position = "none")
 
 evtChart
 ```
