@@ -56,11 +56,22 @@ Column {data-width = 150}
 knitr::include_graphics("images/bps.jpg")
 ```
 
+### discuss the figure
+
+##### discussion
+
+Row {data-width = 550}
+-----------------------------------------------------------------------
+
 ### Map of Current Ecosystems
 
 ```{r}
 knitr::include_graphics("images/evt.jpg")
 ```
+
+### discuss the figure
+
+##### discussion
 
 Row {data-width = 550}
 -----------------------------------------------------------------------
@@ -78,20 +89,20 @@ matrix_df <- matrix_df[-c(7:15),]
 # make a custom color pallet-you may have to adjust this if some categories are missing! 
 
 # ORIGINAL
-groupColors <-c( "#1d4220", # conifer 
-                 "#fc9d03", # grassland
-                 "#56bf5f", # hardwood
-                 "#397d3f", # hardwood-conifer 
-                 "#7db7c7", # riparian 
-                 "#f5e942", # cur ag
-                 "#1d4220", # cur conifer
-                 "#397d3f", # cur hardwood-conifer
-                 "#b0af9e", # developed
-                 "#eb4034", # exotics
-                 "#fc9d03", # grassland
-                 "#56bf5f", # hardwood
-                 "#7db7c7",
-                 "#6e4f1e"# shrubland
+groupColors <-c( "#1B5E20", # forest green for conifer
+                 "#D17B0F", # earthy orange for grassland
+                 "#689F38", # deep green for hardwood
+                 "#4C8C4A", # moss green for hardwood-conifer
+                 "#4FC3F7", # sky blue for riparian
+                 "#FF6F00", # amber for shrubland
+                 "#FBC02D", # yellow for agriculture
+                 "#1B5E2E", # conifer
+                 "#795548", # brown for developed areas
+                 "#E91E63", # magenta for exotics
+                 "#D17B0F", # grassland
+                 "#689F30", # hardwood
+                 "#4FC3F7", # riparian
+                 "#FF6F00"  # shrubland
 )
 
 #make chord diagram
@@ -119,6 +130,19 @@ Column {data-width = 350}
 ### Biophysical Settings
 
 ```{r bps, fig.height = 5, fig.width = 10}
+bps_colors <- c(
+  "#556B2F", # Dark olive green, deep and rich
+  "#8B4513", # Saddle brown, like tree bark
+  "#6B8E23", # Olive drab, typical of leafy canopies
+  "#228B22", # Forest green, classic and deep
+  "#DEB887", # Burlywood, light and earthy
+  "#A0522D", # Sienna, a reddish-brown earth tone
+  "#B8860B", # Dark goldenrod, rich and warm
+  "#CD853F", # Peru, a soft and earthy orange
+  "#808000", # Olive, muted and natural
+  "#3CB371"  # Medium sea green, refreshing and vibrant
+)
+
 bps_data <- read.csv("data/bps_aoi_attributes.csv")
 
 # wrangle data
@@ -131,8 +155,9 @@ bpsname <- bps_data %>%
 
 # plot historical (bps)data
 bpsChart <- 
-  ggplot(data = bpsname, aes(x = BPS_NAME, y = REL_PERCENT)) +
+  ggplot(data = bpsname, aes(x = BPS_NAME, y = REL_PERCENT, fill = BPS_NAME)) +
   geom_bar(stat = "identity") +
+  scale_fill_manual(values = bps_colors) +
   labs(
     title = "Top 10 Biophysical Settings",
     caption = "Data from landfire.gov; Chart © Randy Swaty",
@@ -152,6 +177,19 @@ Column {data-width = 350}
 ### Existing Vegetation Types
 
 ```{r evt, fig.height = 5, fig.width = 10}
+evt_colors <- c(
+  "#A8B6A6", # Sage green, reminiscent of soft foliage
+  "#D2B48C", # Tan, like dry grass or sand
+  "#CAB2D6", # Heather purple, muted and subtle
+  "#E9967A", # Dark salmon, like sunset skies
+  "#A3C1AD", # A more muted teal, like calm water
+  "#F4A460", # Sandy brown, warm and earthy
+  "#8FBC8F", # Sea green, soft and natural
+  "#FFDAB9", # Peach, light and delicate
+  "#BC8F8F", # Rosy brown, soft and warm
+  "#DDA0DD"  # Pale violet, like early spring flowers
+)
+
 evtname <- read.csv(file = "data/evt_aoi_attributes.csv") %>%
   group_by(EVT_NAME) %>%
   summarize(ACRES = sum(ACRES),
@@ -161,8 +199,9 @@ evtname <- read.csv(file = "data/evt_aoi_attributes.csv") %>%
 
 # plot
 evtChart <-
-  ggplot(data = evtname, aes(x = EVT_NAME, y = REL_PERCENT)) +
+  ggplot(data = evtname, aes(x = EVT_NAME, y = REL_PERCENT, fill = EVT_NAME)) +
   geom_bar(stat = "identity") +
+  scale_fill_manual(values = colors) +
   labs(
     title = "Top 10 Existing Vegetation Types",
     caption = "Data from landfire.gov; Chart © Randy Swaty",
